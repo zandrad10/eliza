@@ -312,6 +312,11 @@ export async function initializeClients(
 
     if (clientTypes.includes("twitter")) {
         const twitterClient = await TwitterClientInterface.start(runtime);
+        // TODO: This might be incorrect, please test if you are concerned about this functionality
+        // By default we have disabled this because it is annoying for users
+        (twitterClient as any).enableSearch = !isFalsish(
+            getSecret(character, "TWITTER_SEARCH_ENABLE")
+        );
         if (twitterClient) clients.twitter = twitterClient;
     }
 
@@ -329,6 +334,31 @@ export async function initializeClients(
     }
 
     return clients;
+}
+
+function isFalsish(input: any): boolean {
+    // If the input is exactly NaN, return true
+    if (Number.isNaN(input)) {
+        return true;
+    }
+
+    // Convert input to a string if it's not null or undefined
+    const value = input == null ? "" : String(input);
+
+    // List of common falsish string representations
+    const falsishValues = [
+        "false",
+        "0",
+        "no",
+        "n",
+        "off",
+        "null",
+        "undefined",
+        "",
+    ];
+
+    // Check if the value (trimmed and lowercased) is in the falsish list
+    return falsishValues.includes(value.trim().toLowerCase());
 }
 
 function getSecret(character: Character, secret: string) {
@@ -458,8 +488,8 @@ async function startAgent(
 }
 
 const startAgents = async () => {
-    const dc = new DirectClient();
-    await dc.start(parseInt(settings.SERVER_PORT || "3000"));
+    const directClient = new DirectClient();
+    await directClient.start(parseInt(settings.SERVER_PORT || "3000"));
     const args = parseArguments();
 
     let charactersArg = args.characters || args.character;
@@ -472,7 +502,7 @@ const startAgents = async () => {
 
     try {
         for (const character of characters) {
-            await startAgent(character, dc);
+            await startAgent(character, directClient);
         }
     } catch (error) {
         elizaLogger.error("Error starting agents:", error);
