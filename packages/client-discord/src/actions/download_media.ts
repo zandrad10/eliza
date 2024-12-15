@@ -104,7 +104,7 @@ export default {
         const videoInfo = await videoService.fetchVideoInfo(mediaUrl);
         const mediaPath = await videoService.downloadVideo(videoInfo);
 
-        const response: Content = {
+        const _response: Content = {
             text: `I downloaded the video "${videoInfo.title}" and attached it below.`,
             action: "DOWNLOAD_MEDIA_RESPONSE",
             source: message.content.source,
@@ -120,7 +120,7 @@ export default {
             try {
                 await callback(
                     {
-                        ...response,
+                        ..._response,
                     },
                     ["content_cache/" + filename]
                 );
@@ -144,7 +144,7 @@ export default {
             }
         }
 
-        return response;
+        return _response;
     },
     examples: [
         [
