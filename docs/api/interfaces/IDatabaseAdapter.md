@@ -1,4 +1,4 @@
-[@ai16z/eliza v0.1.4-alpha.3](../index.md) / IDatabaseAdapter
+[@ai16z/eliza v0.1.5-alpha.5](../index.md) / IDatabaseAdapter
 
 # Interface: IDatabaseAdapter
 
@@ -14,13 +14,13 @@ Database instance
 
 #### Defined in
 
-[packages/core/src/types.ts:719](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L719)
+[packages/core/src/types.ts:781](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L781)
 
 ## Methods
 
-### init()?
+### init()
 
-> `optional` **init**(): `Promise`\<`void`\>
+> **init**(): `Promise`\<`void`\>
 
 Optional initialization
 
@@ -30,7 +30,23 @@ Optional initialization
 
 #### Defined in
 
-[packages/core/src/types.ts:722](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L722)
+[packages/core/src/types.ts:784](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L784)
+
+***
+
+### close()
+
+> **close**(): `Promise`\<`void`\>
+
+Close database connection
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[packages/core/src/types.ts:787](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L787)
 
 ***
 
@@ -50,7 +66,7 @@ Get account by ID
 
 #### Defined in
 
-[packages/core/src/types.ts:725](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L725)
+[packages/core/src/types.ts:790](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L790)
 
 ***
 
@@ -70,7 +86,7 @@ Create new account
 
 #### Defined in
 
-[packages/core/src/types.ts:728](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L728)
+[packages/core/src/types.ts:793](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L793)
 
 ***
 
@@ -104,7 +120,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:731](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L731)
+[packages/core/src/types.ts:796](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L796)
 
 ***
 
@@ -122,7 +138,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:741](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L741)
+[packages/core/src/types.ts:806](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L806)
 
 ***
 
@@ -146,7 +162,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:743](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L743)
+[packages/core/src/types.ts:808](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L808)
 
 ***
 
@@ -176,7 +192,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:749](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L749)
+[packages/core/src/types.ts:814](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L814)
 
 ***
 
@@ -202,7 +218,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:758](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L758)
+[packages/core/src/types.ts:823](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L823)
 
 ***
 
@@ -222,7 +238,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:765](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L765)
+[packages/core/src/types.ts:830](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L830)
 
 ***
 
@@ -254,7 +270,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:767](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L767)
+[packages/core/src/types.ts:832](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L832)
 
 ***
 
@@ -276,7 +292,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:777](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L777)
+[packages/core/src/types.ts:842](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L842)
 
 ***
 
@@ -308,7 +324,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:782](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L782)
+[packages/core/src/types.ts:847](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L847)
 
 ***
 
@@ -330,7 +346,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:794](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L794)
+[packages/core/src/types.ts:859](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L859)
 
 ***
 
@@ -350,7 +366,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:800](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L800)
+[packages/core/src/types.ts:865](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L865)
 
 ***
 
@@ -370,7 +386,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:802](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L802)
+[packages/core/src/types.ts:867](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L867)
 
 ***
 
@@ -392,7 +408,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:804](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L804)
+[packages/core/src/types.ts:869](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L869)
 
 ***
 
@@ -420,7 +436,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:810](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L810)
+[packages/core/src/types.ts:875](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L875)
 
 ***
 
@@ -438,7 +454,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:818](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L818)
+[packages/core/src/types.ts:883](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L883)
 
 ***
 
@@ -456,7 +472,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:820](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L820)
+[packages/core/src/types.ts:885](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L885)
 
 ***
 
@@ -474,7 +490,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:822](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L822)
+[packages/core/src/types.ts:887](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L887)
 
 ***
 
@@ -492,7 +508,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:824](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L824)
+[packages/core/src/types.ts:889](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L889)
 
 ***
 
@@ -510,7 +526,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:826](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L826)
+[packages/core/src/types.ts:891](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L891)
 
 ***
 
@@ -528,7 +544,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:828](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L828)
+[packages/core/src/types.ts:893](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L893)
 
 ***
 
@@ -546,7 +562,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:830](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L830)
+[packages/core/src/types.ts:895](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L895)
 
 ***
 
@@ -564,7 +580,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:832](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L832)
+[packages/core/src/types.ts:897](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L897)
 
 ***
 
@@ -582,7 +598,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:834](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L834)
+[packages/core/src/types.ts:899](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L899)
 
 ***
 
@@ -602,7 +618,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:836](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L836)
+[packages/core/src/types.ts:901](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L901)
 
 ***
 
@@ -622,7 +638,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:838](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L838)
+[packages/core/src/types.ts:903](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L903)
 
 ***
 
@@ -640,7 +656,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:840](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L840)
+[packages/core/src/types.ts:905](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L905)
 
 ***
 
@@ -658,7 +674,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:842](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L842)
+[packages/core/src/types.ts:907](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L907)
 
 ***
 
@@ -678,7 +694,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:844](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L844)
+[packages/core/src/types.ts:909](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L909)
 
 ***
 
@@ -700,7 +716,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:849](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L849)
+[packages/core/src/types.ts:914](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L914)
 
 ***
 
@@ -722,7 +738,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:855](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L855)
+[packages/core/src/types.ts:920](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L920)
 
 ***
 
@@ -744,7 +760,7 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:857](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L857)
+[packages/core/src/types.ts:922](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L922)
 
 ***
 
@@ -764,4 +780,4 @@ Get memories matching criteria
 
 #### Defined in
 
-[packages/core/src/types.ts:862](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L862)
+[packages/core/src/types.ts:927](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L927)

@@ -1,4 +1,4 @@
-[@ai16z/eliza v0.1.4-alpha.3](../index.md) / ServiceType
+[@ai16z/eliza v0.1.5-alpha.5](../index.md) / ServiceType
 
 # Enumeration: ServiceType
 
@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1096](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1096)
+[packages/core/src/types.ts:1199](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1199)
 
 ***
 
@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1097](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1097)
+[packages/core/src/types.ts:1200](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1200)
 
 ***
 
@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1098](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1098)
+[packages/core/src/types.ts:1201](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1201)
 
 ***
 
@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1099](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1099)
+[packages/core/src/types.ts:1202](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1202)
 
 ***
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1100](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1100)
+[packages/core/src/types.ts:1203](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1203)
 
 ***
 
@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1101](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1101)
+[packages/core/src/types.ts:1204](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1204)
 
 ***
 
@@ -70,7 +70,27 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1102](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1102)
+[packages/core/src/types.ts:1205](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1205)
+
+***
+
+### INTIFACE
+
+> **INTIFACE**: `"intiface"`
+
+#### Defined in
+
+[packages/core/src/types.ts:1206](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1206)
+
+***
+
+### AWS\_S3
+
+> **AWS\_S3**: `"aws_s3"`
+
+#### Defined in
+
+[packages/core/src/types.ts:1207](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1207)
 
 ***
 
@@ -80,4 +100,14 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:1103](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1103)
+[packages/core/src/types.ts:1208](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1208)
+
+***
+
+### SLACK
+
+> **SLACK**: `"slack"`
+
+#### Defined in
+
+[packages/core/src/types.ts:1209](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1209)

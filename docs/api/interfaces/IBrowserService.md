@@ -1,4 +1,4 @@
-[@ai16z/eliza v0.1.4-alpha.3](../index.md) / IBrowserService
+[@ai16z/eliza v0.1.5-alpha.5](../index.md) / IBrowserService
 
 # Interface: IBrowserService
 
@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[packages/core/src/types.ts:944](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L944)
+[packages/core/src/types.ts:1009](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1009)
 
 ## Methods
 
@@ -48,7 +48,7 @@ Add abstract initialize method that must be implemented by derived classes
 
 #### Defined in
 
-[packages/core/src/types.ts:949](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L949)
+[packages/core/src/types.ts:1014](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1014)
 
 ***
 
@@ -62,7 +62,7 @@ Add abstract initialize method that must be implemented by derived classes
 
 #### Defined in
 
-[packages/core/src/types.ts:1078](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1078)
+[packages/core/src/types.ts:1150](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1150)
 
 ***
 
@@ -94,4 +94,4 @@ Add abstract initialize method that must be implemented by derived classes
 
 #### Defined in
 
-[packages/core/src/types.ts:1079](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1079)
+[packages/core/src/types.ts:1151](https://github.com/ai16z/eliza/blob/main/packages/core/src/types.ts#L1151)

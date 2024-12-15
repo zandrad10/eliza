@@ -99,6 +99,11 @@ export class AgentRuntime implements IAgentRuntime {
     modelProvider: ModelProviderName;
 
     /**
+     * The model to use for generateImage.
+     */
+    imageModelProvider: ModelProviderName;
+
+    /**
      * Fetch function to use
      * Some environments may not have access to the global fetch function and need a custom fetch override.
      */
@@ -137,6 +142,7 @@ export class AgentRuntime implements IAgentRuntime {
     services: Map<ServiceType, Service> = new Map();
     memoryManagers: Map<string, IMemoryManager> = new Map();
     cacheManager: ICacheManager;
+    clients: Record<string, any>;
 
     registerMemoryManager(manager: IMemoryManager): void {
         if (!manager.tableName) {
@@ -291,19 +297,29 @@ export class AgentRuntime implements IAgentRuntime {
         this.serverUrl = opts.serverUrl ?? this.serverUrl;
 
         elizaLogger.info("Setting model provider...");
-        elizaLogger.info(
-            "- Character model provider:",
-            this.character.modelProvider
-        );
-        elizaLogger.info("- Opts model provider:", opts.modelProvider);
-        elizaLogger.info("- Current model provider:", this.modelProvider);
+        elizaLogger.info("Model Provider Selection:", {
+            characterModelProvider: this.character.modelProvider,
+            optsModelProvider: opts.modelProvider,
+            currentModelProvider: this.modelProvider,
+            finalSelection:
+                this.character.modelProvider ??
+                opts.modelProvider ??
+                this.modelProvider,
+        });
 
         this.modelProvider =
             this.character.modelProvider ??
             opts.modelProvider ??
             this.modelProvider;
 
+        this.imageModelProvider =
+            this.character.imageModelProvider ?? this.modelProvider;
+
         elizaLogger.info("Selected model provider:", this.modelProvider);
+        elizaLogger.info(
+            "Selected image model provider:",
+            this.imageModelProvider
+        );
 
         // Validate model provider
         if (!Object.values(ModelProviderName).includes(this.modelProvider)) {
@@ -390,6 +406,30 @@ export class AgentRuntime implements IAgentRuntime {
         }
     }
 
+    async stop() {
+        elizaLogger.debug("runtime::stop - character", this.character);
+        // stop services, they don't have a stop function
+        // just initialize
+
+        // plugins
+        // have actions, providers, evaluators (no start/stop)
+        // services (just initialized), clients
+
+        // client have a start
+        for (const cStr in this.clients) {
+            const c = this.clients[cStr];
+            elizaLogger.log(
+                "runtime::stop - requesting",
+                cStr,
+                "client stop for",
+                this.character.name
+            );
+            c.stop();
+        }
+        // we don't need to unregister with directClient
+        // don't need to worry about knowledge
+    }
+
     /**
      * Processes character knowledge by creating document memories and fragment memories.
      * This function takes an array of knowledge items, creates a document memory for each item if it doesn't exist,
@@ -405,7 +445,7 @@ export class AgentRuntime implements IAgentRuntime {
                 continue;
             }
 
-            console.log(
+            elizaLogger.info(
                 "Processing knowledge for ",
                 this.character.name,
                 " - ",
@@ -486,7 +526,7 @@ export class AgentRuntime implements IAgentRuntime {
         for (const response of responses) {
             if (!response.content?.action) {
                 elizaLogger.warn("No action found in the response content.");
-                return;
+                continue;
             }
 
             const normalizedAction = response.content.action
@@ -495,56 +535,60 @@ export class AgentRuntime implements IAgentRuntime {
 
             elizaLogger.success(`Normalized action: ${normalizedAction}`);
 
-        let action = this.actions.find(
-            (a: { name: string }) =>
-                a.name
-                    .toLowerCase()
-                    .replace("_", "")
-                    .includes(normalizedAction) ||
-                normalizedAction.includes(a.name.toLowerCase().replace("_", ""))
-        );
+            let action = this.actions.find(
+                (a: { name: string }) =>
+                    a.name
+                        .toLowerCase()
+                        .replace("_", "")
+                        .includes(normalizedAction) ||
+                    normalizedAction.includes(
+                        a.name.toLowerCase().replace("_", "")
+                    )
+            );
 
-        if (!action) {
-            elizaLogger.info("Attempting to find action in similes.");
-            for (const _action of this.actions) {
-                const simileAction = _action.similes.find(
-                    (simile) =>
-                        simile
-                            .toLowerCase()
-                            .replace("_", "")
-                            .includes(normalizedAction) ||
-                        normalizedAction.includes(
-                            simile.toLowerCase().replace("_", "")
-                        )
-                );
-                if (simileAction) {
-                    action = _action;
-                    elizaLogger.success(
-                        `Action found in similes: ${action.name}`
+            if (!action) {
+                elizaLogger.info("Attempting to find action in similes.");
+                for (const _action of this.actions) {
+                    const simileAction = _action.similes.find(
+                        (simile) =>
+                            simile
+                                .toLowerCase()
+                                .replace("_", "")
+                                .includes(normalizedAction) ||
+                            normalizedAction.includes(
+                                simile.toLowerCase().replace("_", "")
+                            )
                     );
-                    break;
+                    if (simileAction) {
+                        action = _action;
+                        elizaLogger.success(
+                            `Action found in similes: ${action.name}`
+                        );
+                        break;
+                    }
                 }
             }
-        }
 
-        if (!action) {
-            elizaLogger.error(
-                "No action found for",
-                response.content.action
-            );
-            return;
-        }
+            if (!action) {
+                elizaLogger.error(
+                    "No action found for",
+                    response.content.action
+                );
+                continue;
+            }
 
-        if (!action.handler) {
-            elizaLogger.error(`Action ${action.name} has no handler.`);
-            return;
-        }
+            if (!action.handler) {
+                elizaLogger.error(`Action ${action.name} has no handler.`);
+                continue;
+            }
 
-        try {
-            elizaLogger.info(`Executing handler for action: ${action.name}`);
+            try {
+                elizaLogger.info(
+                    `Executing handler for action: ${action.name}`
+                );
                 await action.handler(this, message, state, response, callback);
             } catch (error) {
-            elizaLogger.error(error);
+                elizaLogger.error(error);
             }
         }
     }
@@ -553,10 +597,16 @@ export class AgentRuntime implements IAgentRuntime {
      * Evaluate the message and state using the registered evaluators.
      * @param message The message to evaluate.
      * @param state The state of the agent.
-     * @param didRespond Whether the agent responded to the message.
+     * @param didRespond Whether the agent responded to the message.~
+     * @param callback The handler callback
      * @returns The results of the evaluation.
      */
-    async evaluate(message: Memory, state?: State, didRespond?: boolean) {
+    async evaluate(
+        message: Memory,
+        state?: State,
+        didRespond?: boolean,
+        callback?: HandlerCallback
+    ) {
         const evaluatorPromises = this.evaluators.map(
             async (evaluator: Evaluator) => {
                 elizaLogger.log("Evaluating", evaluator.name);
@@ -582,17 +632,12 @@ export class AgentRuntime implements IAgentRuntime {
             return [];
         }
 
-        const evaluators = formatEvaluators(evaluatorsData as Evaluator[]);
-        const evaluatorNames = formatEvaluatorNames(
-            evaluatorsData as Evaluator[]
-        );
-
         const context = composeContext({
             state: {
                 ...state,
-                evaluators,
-                evaluatorNames,
-            } as State,
+                evaluators: formatEvaluators(evaluatorsData),
+                evaluatorNames: formatEvaluatorNames(evaluatorsData),
+            },
             template:
                 this.character.templates?.evaluationTemplate ||
                 evaluationTemplate,
@@ -604,21 +649,18 @@ export class AgentRuntime implements IAgentRuntime {
             modelClass: ModelClass.SMALL,
         });
 
-        const parsedResult = parseJsonArrayFromText(
+        const evaluators = parseJsonArrayFromText(
             result
         ) as unknown as string[];
 
-        this.evaluators
-            .filter((evaluator: Evaluator) =>
-                parsedResult?.includes(evaluator.name)
-            )
-            .forEach((evaluator: Evaluator) => {
-                if (!evaluator?.handler) return;
+        for (const evaluator of this.evaluators) {
+            if (!evaluators.includes(evaluator.name)) continue;
 
-                evaluator.handler(this, message);
-            });
+            if (evaluator.handler)
+                await evaluator.handler(this, message, state, {}, callback);
+        }
 
-        return parsedResult;
+        return evaluators;
     }
 
     /**
@@ -817,7 +859,7 @@ export class AgentRuntime implements IAgentRuntime {
             .map(
                 (attachment) =>
                     `ID: ${attachment.id}
-Name: ${attachment.title} 
+Name: ${attachment.title}
 URL: ${attachment.url}
 Type: ${attachment.source}
 Description: ${attachment.description}
@@ -955,13 +997,9 @@ Text: ${attachment.text}
                 .join(" ");
         }
 
-
         const knowledegeData = await knowledge.get(this, message);
 
-        const formattedKnowledge = formatKnowledge(
-            knowledegeData
-        );
-
+        const formattedKnowledge = formatKnowledge(knowledegeData);
 
         const initialState = {
             agentId: this.agentId,
@@ -1223,7 +1261,7 @@ Text: ${attachment.text}
                 (attachment) =>
                     `ID: ${attachment.id}
 Name: ${attachment.title}
-URL: ${attachment.url} 
+URL: ${attachment.url}
 Type: ${attachment.source}
 Description: ${attachment.description}
 Text: ${attachment.text}
@@ -1244,5 +1282,7 @@ Text: ${attachment.text}
 }
 
 const formatKnowledge = (knowledge: KnowledgeItem[]) => {
-    return knowledge.map((knowledge) => `- ${knowledge.content.text}`).join("\n");
+    return knowledge
+        .map((knowledge) => `- ${knowledge.content.text}`)
+        .join("\n");
 };

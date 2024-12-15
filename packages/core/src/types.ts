@@ -192,6 +192,7 @@ export type Models = {
     [ModelProviderName.GROK]: Model;
     [ModelProviderName.GROQ]: Model;
     [ModelProviderName.LLAMACLOUD]: Model;
+    [ModelProviderName.TOGETHER]: Model;
     [ModelProviderName.LLAMALOCAL]: Model;
     [ModelProviderName.GOOGLE]: Model;
     [ModelProviderName.CLAUDE_VERTEX]: Model;
@@ -199,6 +200,14 @@ export type Models = {
     [ModelProviderName.OPENROUTER]: Model;
     [ModelProviderName.OLLAMA]: Model;
     [ModelProviderName.HEURIST]: Model;
+    [ModelProviderName.GALADRIEL]: Model;
+    [ModelProviderName.FAL]: Model;
+    [ModelProviderName.GAIANET]: Model;
+    [ModelProviderName.ALI_BAILIAN]: Model;
+    [ModelProviderName.VOLENGINE]: Model;
+    [ModelProviderName.NANOGPT]: Model;
+    [ModelProviderName.HYPERBOLIC]: Model;
+    [ModelProviderName.VENICE]: Model;
 };
 
 /**
@@ -211,6 +220,7 @@ export enum ModelProviderName {
     GROK = "grok",
     GROQ = "groq",
     LLAMACLOUD = "llama_cloud",
+    TOGETHER = "together",
     LLAMALOCAL = "llama_local",
     GOOGLE = "google",
     CLAUDE_VERTEX = "claude_vertex",
@@ -218,6 +228,14 @@ export enum ModelProviderName {
     OPENROUTER = "openrouter",
     OLLAMA = "ollama",
     HEURIST = "heurist",
+    GALADRIEL = "galadriel",
+    FAL = "falai",
+    GAIANET = "gaianet",
+    ALI_BAILIAN = "ali_bailian",
+    VOLENGINE = "volengine",
+    NANOGPT = "nanogpt",
+    HYPERBOLIC = "hyperbolic",
+    VENICE = "venice",
 }
 
 /**
@@ -551,6 +569,9 @@ export type Media = {
 
     /** Text content */
     text: string;
+
+    /** Content type */
+    contentType?: string;
 };
 
 /**
@@ -558,10 +579,10 @@ export type Media = {
  */
 export type Client = {
     /** Start client connection */
-    start: (runtime?: IAgentRuntime) => Promise<unknown>;
+    start: (runtime: IAgentRuntime) => Promise<unknown>;
 
     /** Stop client connection */
-    stop: (runtime?: IAgentRuntime) => Promise<unknown>;
+    stop: (runtime: IAgentRuntime) => Promise<unknown>;
 };
 
 /**
@@ -598,7 +619,16 @@ export enum Clients {
     DIRECT = "direct",
     TWITTER = "twitter",
     TELEGRAM = "telegram",
+    FARCASTER = "farcaster",
+    LENS = "lens",
+    AUTO = "auto",
+    SLACK = "slack",
 }
+
+export interface IAgentConfig {
+    [key: string]: string;
+}
+
 /**
  * Configuration for an agent character
  */
@@ -618,6 +648,9 @@ export type Character = {
     /** Model provider to use */
     modelProvider: ModelProviderName;
 
+    /** Image model provider to use, if different from modelProvider */
+    imageModelProvider?: ModelProviderName;
+
     /** Optional model endpoint override */
     modelEndpointOverride?: string;
 
@@ -634,13 +667,18 @@ export type Character = {
         twitterMessageHandlerTemplate?: string;
         twitterShouldRespondTemplate?: string;
         farcasterPostTemplate?: string;
+        lensPostTemplate?: string;
         farcasterMessageHandlerTemplate?: string;
+        lensMessageHandlerTemplate?: string;
         farcasterShouldRespondTemplate?: string;
+        lensShouldRespondTemplate?: string;
         telegramMessageHandlerTemplate?: string;
         telegramShouldRespondTemplate?: string;
         discordVoiceHandlerTemplate?: string;
         discordShouldRespondTemplate?: string;
         discordMessageHandlerTemplate?: string;
+        slackMessageHandlerTemplate?: string;
+        slackShouldRespondTemplate?: string;
     };
 
     /** Character biography */
@@ -654,9 +692,6 @@ export type Character = {
 
     /** Example posts */
     postExamples: string[];
-
-    /** Known people */
-    people: string[];
 
     /** Known topics */
     topics: string[];
@@ -676,10 +711,19 @@ export type Character = {
     /** Optional configuration */
     settings?: {
         secrets?: { [key: string]: string };
-        buttplug?: boolean;
+        intiface?: boolean;
         voice?: {
-            model?: string;
-            url?: string;
+            model?: string; // For VITS
+            url?: string; // Legacy VITS support
+            elevenlabs?: {
+                // New structured ElevenLabs config
+                voiceId: string;
+                model?: string;
+                stability?: string;
+                similarityBoost?: string;
+                style?: string;
+                useSpeakerBoost?: string;
+            };
         };
         model?: string;
         embeddingModel?: string;
@@ -695,8 +739,22 @@ export type Character = {
         discord?: {
             shouldIgnoreBotMessages?: boolean;
             shouldIgnoreDirectMessages?: boolean;
+            messageSimilarityThreshold?: number;
+            isPartOfTeam?: boolean;
+            teamAgentIds?: string[];
+            teamLeaderId?: string;
+            teamMemberInterestKeywords?: string[];
         };
         telegram?: {
+            shouldIgnoreBotMessages?: boolean;
+            shouldIgnoreDirectMessages?: boolean;
+            messageSimilarityThreshold?: number;
+            isPartOfTeam?: boolean;
+            teamAgentIds?: string[];
+            teamLeaderId?: string;
+            teamMemberInterestKeywords?: string[];
+        };
+        slack?: {
             shouldIgnoreBotMessages?: boolean;
             shouldIgnoreDirectMessages?: boolean;
         };
@@ -717,6 +775,10 @@ export type Character = {
         bio: string;
         nicknames?: string[];
     };
+    /** Optional NFT prompt */
+    nft?: {
+        prompt: string;
+    }
 };
 
 /**
@@ -967,11 +1029,14 @@ export interface IAgentRuntime {
     databaseAdapter: IDatabaseAdapter;
     token: string | null;
     modelProvider: ModelProviderName;
+    imageModelProvider: ModelProviderName;
     character: Character;
     providers: Provider[];
     actions: Action[];
     evaluators: Evaluator[];
     plugins: Plugin[];
+
+    fetch?: typeof fetch | null;
 
     messageManager: IMemoryManager;
     descriptionManager: IMemoryManager;
@@ -982,6 +1047,9 @@ export interface IAgentRuntime {
     cacheManager: ICacheManager;
 
     services: Map<ServiceType, Service>;
+    // any could be EventEmitter
+    // but I think the real solution is forthcoming as a base client interface
+    clients: Record<string, any>;
 
     initialize(): Promise<void>;
 
@@ -1008,7 +1076,8 @@ export interface IAgentRuntime {
     evaluate(
         message: Memory,
         state?: State,
-        didRespond?: boolean
+        didRespond?: boolean,
+        callback?: HandlerCallback
     ): Promise<string[]>;
 
     ensureParticipantExists(userId: UUID, roomId: UUID): Promise<void>;
@@ -1103,6 +1172,37 @@ export interface IPdfService extends Service {
     convertPdfToText(pdfBuffer: Buffer): Promise<string>;
 }
 
+export interface IAwsS3Service extends Service {
+    uploadFile(
+        imagePath: string,
+        subDirectory: string,
+        useSignedUrl: boolean,
+        expiresIn: number
+    ): Promise<{
+        success: boolean;
+        url?: string;
+        error?: string;
+    }>;
+    generateSignedUrl(fileName: string, expiresIn: number): Promise<string>;
+}
+
+export type SearchResult = {
+    title: string;
+    url: string;
+    content: string;
+    score: number;
+    raw_content: string | null;
+};
+
+export type SearchResponse = {
+    query: string;
+    follow_up_questions: string[] | null;
+    answer: string | null;
+    images: string[];
+    results: SearchResult[];
+    response_time: number;
+};
+
 export enum ServiceType {
     IMAGE_DESCRIPTION = "image_description",
     TRANSCRIPTION = "transcription",
@@ -1111,7 +1211,10 @@ export enum ServiceType {
     BROWSER = "browser",
     SPEECH_GENERATION = "speech_generation",
     PDF = "pdf",
+    INTIFACE = "intiface",
+    AWS_S3 = "aws_s3",
     BUTTPLUG = "buttplug",
+    SLACK = "slack",
 }
 
 export enum LoggingLevel {
@@ -1124,3 +1227,14 @@ export type KnowledgeItem = {
     id: UUID;
     content: Content;
 };
+
+export interface ActionResponse {
+    like: boolean;
+    retweet: boolean;
+    quote?: boolean;
+    reply?: boolean;
+}
+
+export interface ISlackService extends Service {
+    client: any;
+}

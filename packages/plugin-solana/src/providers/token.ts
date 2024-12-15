@@ -15,7 +15,8 @@ import NodeCache from "node-cache";
 import * as path from "path";
 import { toBN } from "../bignumber.ts";
 import { WalletProvider, Item } from "./wallet.ts";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
+import { getWalletKey } from "../keypairUtils.ts";
 
 const PROVIDER_CONFIG = {
     BIRDEYE_API: "https://public-api.birdeye.so",
@@ -198,16 +199,16 @@ export class TokenProvider {
             };
 
             const response = await fetch(this.GRAPHQL_ENDPOINT, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': settings.CODEX_API_KEY
+                    "Content-Type": "application/json",
+                    Authorization: settings.CODEX_API_KEY,
                 },
                 body: JSON.stringify({
                     query,
-                    variables
-                })
-            }).then(res => res.json());
+                    variables,
+                }),
+            }).then((res) => res.json());
 
             const token = response.data?.data?.token;
 
@@ -1102,9 +1103,11 @@ const tokenProvider: Provider = {
         _state?: State
     ): Promise<string> => {
         try {
+            const { publicKey } = await getWalletKey(runtime, false);
+
             const walletProvider = new WalletProvider(
                 connection,
-                new PublicKey(PROVIDER_CONFIG.MAIN_WALLET)
+                publicKey
             );
 
             const provider = new TokenProvider(
