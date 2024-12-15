@@ -103,7 +103,7 @@ export const transferAction = {
         runtime: IAgentRuntime,
         message: Memory,
         state: State,
-        response: Memory,
+        _response: Memory,
         callback?: HandlerCallback
     ) => {
         try {

@@ -86,7 +86,7 @@ export const bridgeAction = {
         runtime: IAgentRuntime,
         message: Memory,
         state: State,
-        response: Memory
+        _response: Memory
     ) => {
         const privateKey = runtime.getSetting(
             "EVM_PRIVATE_KEY"

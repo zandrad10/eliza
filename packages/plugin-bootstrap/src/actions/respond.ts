@@ -28,11 +28,11 @@ export const respondAction: Action = {
         _runtime: IAgentRuntime,
         _message: Memory,
         _state: State,
-        response: Memory,
+        _response: Memory,
         callback: HandlerCallback
     ): Promise<boolean> => {
-        if (response) {
-            callback(response.content as Content);
+        if (_response) {
+            callback(_response.content as Content);
         }
         return true;
     },

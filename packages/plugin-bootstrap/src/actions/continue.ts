@@ -88,11 +88,11 @@ export const continueAction: Action = {
         runtime: IAgentRuntime,
         message: Memory,
         state: State,
-        response: Memory,
+        _response: Memory,
         callback: HandlerCallback
     ) => {
-        if (response) {
-            callback(response.content as Content);
+        if (_response) {
+            callback(_response.content as Content);
         }
         if (
             message.content.text.endsWith("?") ||
@@ -114,13 +114,13 @@ export const continueAction: Action = {
                 template: shouldContinueTemplate,
             });
 
-            const _response = await generateTrueOrFalse({
+            const response = await generateTrueOrFalse({
                 context: shouldRespondContext,
                 modelClass: ModelClass.SMALL,
                 runtime,
             });
 
-            return _response;
+            return response;
         }
 
         const shouldContinue = await _shouldContinue(state);
@@ -138,16 +138,16 @@ export const continueAction: Action = {
         });
         const { userId, roomId } = message;
 
-        const _response = await generateMessageResponse({
+        const response = await generateMessageResponse({
             runtime,
             context,
             modelClass: ModelClass.LARGE,
         });
 
-        _response.inReplyTo = message.id;
+        response.inReplyTo = message.id;
 
         runtime.databaseAdapter.log({
-            body: { message, context, response: _response },
+            body: { message, context, response: response },
             userId,
             roomId,
             type: "continue",
@@ -163,10 +163,10 @@ export const continueAction: Action = {
             return;
         }
 
-        await callback(_response);
+        await callback(response);
 
         // if the action is CONTINUE, check if we are over maxContinuesInARow
-        if (_response.action === "CONTINUE") {
+        if (response.action === "CONTINUE") {
             const agentMessages = state.recentMessagesData
                 .filter((m: { userId: any }) => m.userId === runtime.agentId)
                 .map((m: { content: any }) => (m.content as Content).action);
@@ -177,12 +177,12 @@ export const continueAction: Action = {
                     (m: string | undefined) => m === "CONTINUE"
                 );
                 if (allContinues) {
-                    _response.action = null;
+                    response.action = null;
                 }
             }
         }
 
-        return _response;
+        return response;
     },
     examples: [
         [

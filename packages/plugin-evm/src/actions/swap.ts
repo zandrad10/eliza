@@ -97,7 +97,7 @@ export const swapAction = {
         runtime: IAgentRuntime,
         message: Memory,
         state: State,
-        response: Memory,
+        _response: Memory,
         callback?: any
     ) => {
         try {

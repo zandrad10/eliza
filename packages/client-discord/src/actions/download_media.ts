@@ -85,7 +85,7 @@ export default {
         runtime: IAgentRuntime,
         message: Memory,
         state: State,
-        response: Memory,
+        _response: Memory,
         callback: HandlerCallback
     ) => {
         const videoService = runtime
@@ -104,7 +104,7 @@ export default {
         const videoInfo = await videoService.fetchVideoInfo(mediaUrl);
         const mediaPath = await videoService.downloadVideo(videoInfo);
 
-        const _response: Content = {
+        const response: Content = {
             text: `I downloaded the video "${videoInfo.title}" and attached it below.`,
             action: "DOWNLOAD_MEDIA_RESPONSE",
             source: message.content.source,
@@ -120,7 +120,7 @@ export default {
             try {
                 await callback(
                     {
-                        ..._response,
+                        ...response,
                     },
                     ["content_cache/" + filename]
                 );
@@ -144,7 +144,7 @@ export default {
             }
         }
 
-        return _response;
+        return response;
     },
     examples: [
         [
