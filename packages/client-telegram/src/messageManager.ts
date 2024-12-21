@@ -1,7 +1,7 @@
 import { Message } from "@telegraf/types";
 import { Context, Telegraf } from "telegraf";
 
-import { composeContext, elizaLogger, ServiceType } from "@ai16z/eliza";
+import { composeContext, elizaLogger, ServiceType, composeRandomUser } from "@ai16z/eliza";
 import { getEmbeddingZeroVector } from "@ai16z/eliza";
 import {
     Content,
@@ -559,13 +559,14 @@ export class MessageManager {
 
         // Use AI to decide for text or captions
         if ("text" in message || ("caption" in message && message.caption)) {
+            
             const shouldRespondContext = composeContext({
                 state,
                 template:
                     this.runtime.character.templates
                         ?.telegramShouldRespondTemplate ||
                     this.runtime.character?.templates?.shouldRespondTemplate ||
-                    telegramShouldRespondTemplate,
+                    composeRandomUser(telegramShouldRespondTemplate, 2),
             });
 
             const response = await generateShouldRespond({
