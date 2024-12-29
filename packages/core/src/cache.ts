@@ -68,8 +68,6 @@ export class MemoryCacheAdapter implements ICacheAdapter {
 
 /**
  * Cache adapter that uses the filesystem to store data.
- */
-        **/
 export class FsCacheAdapter implements ICacheAdapter {
 /**
  * Constructor for creating an instance with the specified data directory.

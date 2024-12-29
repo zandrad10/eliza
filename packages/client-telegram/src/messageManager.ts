@@ -178,8 +178,6 @@ export type InterestChats = {
  * Class representing a Message Manager for handling messages in a Telegram bot.
  * @param {Telegraf<Context>} bot - The Telegraf instance for the bot.
  * @param {IAgentRuntime} runtime - The runtime information for the agent.
- */ 
-    **/
 export class MessageManager {
     public bot: Telegraf<Context>;
     private runtime: IAgentRuntime;

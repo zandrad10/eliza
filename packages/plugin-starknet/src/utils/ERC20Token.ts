@@ -38,8 +38,6 @@ export type TransferCall = {
 
 /**
  * ERC20Token class representing an ERC20 token contract.
- */
-        **/
 export class ERC20Token {
     abi: any;
     contract: Contract;

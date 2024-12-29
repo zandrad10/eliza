@@ -14,8 +14,6 @@ import { sendCast } from "./actions";
 
 /**
  * Class representing a Farcaster Post Manager.
- */
-  **/
 export class FarcasterPostManager {
     private timeout: NodeJS.Timeout | undefined;
 

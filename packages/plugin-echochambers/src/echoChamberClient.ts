@@ -15,8 +15,6 @@ const RETRY_DELAY = 5000;
 
 /**
  * Represents a client for interacting with the Echo Chamber API.
- */
- **/
 export class EchoChamberClient {
     private runtime: IAgentRuntime;
     private config: EchoChamberConfig;

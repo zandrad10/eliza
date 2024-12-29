@@ -292,8 +292,6 @@ interface Transaction {
 /**
  * TrustScoreDatabase class for managing trust score related data in the database.
  * @class
- */
-  **/
 export class TrustScoreDatabase {
     private db: Database;
 
@@ -328,8 +326,6 @@ export class TrustScoreDatabase {
  * - trade
  * - simulation_trade
  * - transactions
- */ 
-    **/
     private initializeSchema() {
         // Enable Foreign Key Support
         this.db.exec(`PRAGMA foreign_keys = ON;`);

@@ -180,8 +180,6 @@ export class AudioMonitor {
 /**
  * Class representing a VoiceManager.
  * @extends EventEmitter
- */
- **/
 export class VoiceManager extends EventEmitter {
     private processingVoice: boolean = false;
     private transcriptionTimeout: NodeJS.Timeout | null = null;

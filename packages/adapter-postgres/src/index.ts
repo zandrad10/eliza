@@ -42,8 +42,6 @@ const __dirname = path.dirname(__filename); // get the name of the directory
  * @class
  * @extends DatabaseAdapter<Pool>
  * @implements IDatabaseCacheAdapter
- */
- **/
 export class PostgresDatabaseAdapter
     extends DatabaseAdapter<Pool>
     implements IDatabaseCacheAdapter

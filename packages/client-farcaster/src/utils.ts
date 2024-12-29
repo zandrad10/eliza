@@ -21,8 +21,6 @@ export function castId({ hash, agentId }: { hash: string; agentId: string }) {
  * @param {string} props.hash - The hash to be casted to UUID.
  * @param {string} props.agentId - The agentId to be casted to UUID.
  * @returns {string} - The UUID format generated from the hash and agentId.
- */
-        **/
 export function castUuid(props: { hash: string; agentId: string }) {
     return stringToUuid(castId(props));
 }

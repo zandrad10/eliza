@@ -179,8 +179,6 @@ interface QueuedMessage {
  * Represents a Llama Service that extends Service class.
  * Manages initialization, model loading, queue processing, completions, and embeddings.
  * Supports using local GGUF model or Ollama API for completions and embeddings.
- */ 
-        **/
 export class LlamaService extends Service {
     private llama: Llama | undefined;
     private model: LlamaModel | undefined;

@@ -89,8 +89,6 @@ Thread of Tweets You Are Replying To:
 
 /**
  * Class representing a TwitterInteractionClient.
- */
-  **/
 export class TwitterInteractionClient {
     client: ClientBase;
     runtime: IAgentRuntime;

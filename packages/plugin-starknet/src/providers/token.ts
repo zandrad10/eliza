@@ -80,8 +80,6 @@ export const PORTFOLIO_TOKENS = {
 
 /**
  * Class representing a Token Provider.
- */
-        **/
 export class TokenProvider {
     private cache: Cache;
 

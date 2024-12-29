@@ -22,8 +22,6 @@ import { getProfilePictureUri, handleBroadcastResult, omit } from "./utils";
  * @param {Map<string, any>} opts.cache - The cache for storing data.
  * @param {PrivateKeyAccount} opts.account - The private key account for authentication.
  * @param {string} opts.profileId - The profile ID for the client.
- */
- **/
 export class LensClient {
     runtime: IAgentRuntime;
     account: PrivateKeyAccount;

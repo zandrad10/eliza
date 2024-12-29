@@ -839,8 +839,6 @@ export type Products = {
  * @property {ProductVenue} [product_venue] - The venue of the product.
  * @property {string} [approximate_quote_24h_volume] - The approximate trading volume in the last 24 hours.
  * @property {Record<string, any>} [future_product_details] - Details of future product.
- */
-        **/
 export type Product = {
   product_id: string;
   price: string;

@@ -133,8 +133,6 @@ export class GitHubClient {
     async createMemoriesFromFiles() {
         console.log("Create memories");
         const searchPath = this.config.path
-            ? path.join(this.repoPath, this.config.path, "**/*")
-            : path.join(this.repoPath, "**/*");
 
         const files = await glob(searchPath, { nodir: true });
 

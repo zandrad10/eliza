@@ -18,8 +18,6 @@ import StorjProvider from "./providers/StorjProvider";
  * sending them using the LensClient and IAgentRuntime provided during initialization.
  * 
  * @class LensPostManager
- */
- **/
 export class LensPostManager {
     private timeout: NodeJS.Timeout | undefined;
 

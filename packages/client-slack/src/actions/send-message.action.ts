@@ -6,8 +6,6 @@ const MESSAGE_CACHE_TTL = 5000; // 5 seconds TTL
 
 /**
  * Class representing an action to send a message using Slack API.
- */
-  **/
 export class SendMessageAction {
 /**
  * Constructor for creating a new instance of the class.

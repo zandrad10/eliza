@@ -1082,8 +1082,6 @@ export type IPLicenseDetails = {
  * @property {string} licenseTermsId - The unique identifier for the license terms
  * @property {string} blockNumber - The block number when the license was created
  * @property {string} blockTime - The timestamp when the license was created
- */
-          **/
 export type IPLicenseTerms = {
     id: string;
     ipId: Address;

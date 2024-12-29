@@ -77,8 +77,6 @@ interface RecommenderData {
  * @property {number} averageRiskScore - The average risk score given by recommenders.
  * @property {number} averageConsistencyScore - The average consistency score given by recommenders.
  * @property {RecommenderData[]} recommenders - An array of RecommenderData objects containing information about recommenders.
- */
-            **/
 interface TokenRecommendationSummary {
     tokenAddress: string;
     averageTrustScore: number;
