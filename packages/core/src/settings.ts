@@ -18,6 +18,10 @@ interface Settings {
     [key: string]: string | undefined;
 }
 
+interface NamespacedSettings {
+    [namespace: string]: Settings;
+}
+
 let environmentSettings: Settings = {};
 
 /**
@@ -170,7 +174,6 @@ export async function loadEnvConfig(): Promise<Settings> {
         ARGV: process.argv,
         CHARACTER_ARG: process.argv.find((arg) => arg.startsWith("--character=")),
         CWD: process.cwd(),
-    });
 
     return process.env as Settings;
 }
@@ -205,5 +208,6 @@ elizaLogger.info("Parsed settings:", {
     USE_OLLAMA_EMBEDDING_TYPE: typeof settings.USE_OLLAMA_EMBEDDING,
     OLLAMA_EMBEDDING_MODEL: settings.OLLAMA_EMBEDDING_MODEL || "mxbai-embed-large",
 });
+
 
 export default settings;
