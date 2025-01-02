@@ -20,9 +20,19 @@ export const envSchema = z.object({
 });
 
 // Type inference
+/**
+ * * Represents the inferred configuration type based on the specified environment schema.
+ * /
+ */
 export type EnvConfig = z.infer<typeof envSchema>;
 
 // Validation function
+/**
+ * * Validates the environment variables based on the defined env schema.
+ * 
+ * @returns {EnvConfig} The validated environment variables.
+ * /
+ */
 export function validateEnv(): EnvConfig {
     try {
         return envSchema.parse(process.env);
@@ -132,9 +142,21 @@ export const CharacterSchema = z.object({
 });
 
 // Type inference
+/**
+ * * Type definition for the configuration of a character.
+ * /
+ */
 export type CharacterConfig = z.infer<typeof CharacterSchema>;
 
 // Validation function
+/**
+ * * Validates the provided JSON object against the CharacterSchema and returns a valid CharacterConfig object.
+ * Throws an error if validation fails.
+ * 
+ * @param {unknown} json - The JSON object to validate against the CharacterSchema.
+ * @returns {CharacterConfig} - The valid CharacterConfig object.
+ * /
+ */
 export function validateCharacterConfig(json: unknown): CharacterConfig {
     try {
         return CharacterSchema.parse(json);
