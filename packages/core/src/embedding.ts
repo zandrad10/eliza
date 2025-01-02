@@ -4,6 +4,18 @@ import { IAgentRuntime, ModelProviderName } from "./types.ts";
 import settings from "./settings.ts";
 import elizaLogger from "./logger.ts";
 
+/**
+ * * Interface for specifying options for embedding a model.
+ * @typedef {Object} EmbeddingOptions
+ * @property {string} model - The model to be embedded.
+ * @property {string} endpoint - The endpoint for the embedding.
+ * @property {string} [apiKey] - The API key for authentication (optional).
+ * @property {number} [length] - The length of the embedding.
+ * @property {boolean} [isOllama] - Specifies if the model is an Ollama.
+ * @property {number} [dimensions] - The dimensions of the embedding.
+ * @property {string} [provider] - The provider for the embedding.
+ * /
+ */
 interface EmbeddingOptions {
     model: string;
     endpoint: string;
@@ -21,9 +33,23 @@ export const EmbeddingProvider = {
     BGE: "BGE",
 } as const;
 
+/**
+ * * Type representing an Embedding Provider
+ * 
+ * @typedef {keyof typeof EmbeddingProvider} EmbeddingProviderType
+ * /
+ */
 export type EmbeddingProviderType =
     (typeof EmbeddingProvider)[keyof typeof EmbeddingProvider];
 
+/**
+ * * Type representing the configuration for an embedding.
+ * @typedef {Object} EmbeddingConfig
+ * @property {number} dimensions - The number of dimensions in the embedding.
+ * @property {string} model - The name of the embedding model.
+ * @property {EmbeddingProviderType} provider - The type of provider for the embedding.
+ * /
+ */
 export type EmbeddingConfig = {
     readonly dimensions: number;
     readonly model: string;
@@ -57,6 +83,13 @@ export const getEmbeddingConfig = (): EmbeddingConfig => ({
                 : "BGE",
 });
 
+/**
+ * * Asynchronously fetches embedding from a remote endpoint for the given input using the provided options.
+ * @param {string} input - The input text for which embedding needs to be generated.
+ * @param {EmbeddingOptions} options - The options for fetching the embedding, including endpoint, apiKey, model, dimensions, and length.
+ * @returns {Promise<number[]>} - A Promise that resolves with the embedding as an array of numbers.
+ * /
+ */
 async function getRemoteEmbedding(
     input: string,
     options: EmbeddingOptions
@@ -111,6 +144,13 @@ async function getRemoteEmbedding(
     }
 }
 
+/**
+ * * Determine the type of embedding based on the runtime environment and configuration.
+ * 
+ * @param {IAgentRuntime} runtime - The current agent runtime.
+ * @returns {"local" | "remote"} - The type of embedding to use (either "local" or "remote").
+ * /
+ */
 export function getEmbeddingType(runtime: IAgentRuntime): "local" | "remote" {
     const isNode =
         typeof process !== "undefined" &&
@@ -130,6 +170,16 @@ export function getEmbeddingType(runtime: IAgentRuntime): "local" | "remote" {
     return isLocal ? "local" : "remote";
 }
 
+/**
+ * * Retrieves a zero vector with the embedding dimension based on the selected embedding settings.
+ * If USE_OPENAI_EMBEDDING is true, the vector will have a dimension of 1536.
+ * If USE_OLLAMA_EMBEDDING is true, the vector will have a dimension of 1024.
+ * If USE_GAIANET_EMBEDDING is true, the vector will have a dimension of 768.
+ * Otherwise, the vector will have a default dimension of 384 (BGE dimension).
+ * 
+ * @returns {number[]} A zero vector with the specified embedding dimension.
+ * /
+ */
 export function getEmbeddingZeroVector(): number[] {
     let embeddingDimension = 384; // Default BGE dimension
 
@@ -159,6 +209,14 @@ export function getEmbeddingZeroVector(): number[] {
  * @throws {Error} If the API request fails
  */
 
+/**
+ * * Embeds the input text using the specified provider and model.
+ * 
+ * @param {IAgentRuntime} runtime - The agent runtime environment.
+ * @param {string} input - The input text to embed.
+ * @returns {Promise<number[]>} The embedding of the input text as an array of numbers.
+ * /
+ */
 export async function embed(runtime: IAgentRuntime, input: string) {
     elizaLogger.debug("Embedding request:", {
         modelProvider: runtime.character.modelProvider,
