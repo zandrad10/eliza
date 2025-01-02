@@ -52,6 +52,18 @@ import { tavily } from "@tavily/core";
  * @returns The completed message.
  */
 
+/**
+ * * Generates text using the provided configuration options and model.
+ * 
+ * @param {Object} param0 - The parameters object
+ * @param {IAgentRuntime} param0.runtime - The agent runtime environment
+ * @param {string} param0.context - The context for generating text
+ * @param {string} param0.modelClass - The class of the model to use
+ * @param {string[]} [param0.stop] - Optional stop words or tokens
+ * @param {string} [param0.customSystemPrompt] - Optional custom system prompt
+ * @returns {Promise<string>} - The generated text
+ * /
+ */
 export async function generateText({
     runtime,
     context,
