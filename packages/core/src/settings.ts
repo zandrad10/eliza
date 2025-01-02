@@ -18,10 +18,23 @@ elizaLogger.info("Loading character settings:", {
     CWD: process.cwd(),
 });
 
+/**
+ * * Interface representing settings with key-value pairs.
+ * @interface Settings
+ * @property {string} key - The key for the setting.
+ * @property {string | undefined} value - The value assigned to the key, may be undefined.
+ * /
+ */
 interface Settings {
     [key: string]: string | undefined;
 }
 
+/**
+ * Interface representing namespaced settings.
+ * @interface
+ * /
+```
+ */
 interface NamespacedSettings {
     [namespace: string]: Settings;
 }
