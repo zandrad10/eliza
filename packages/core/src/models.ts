@@ -516,10 +516,25 @@ export const models: Models = {
     },
 };
 
+/**
+ * * Get the model for a specific provider and type.
+ * 
+ * @param {ModelProviderName} provider - The name of the model provider.
+ * @param {ModelClass} type - The class of the model.
+ * @returns {Model} The model object.
+ * /
+ */
 export function getModel(provider: ModelProviderName, type: ModelClass) {
     return models[provider].model[type];
 }
 
+/**
+ * * Get the endpoint for a specific ModelProviderName.
+ * 
+ * @param {ModelProviderName} provider - The name of the ModelProvider to get the endpoint for.
+ * @returns {string} The endpoint for the specified ModelProviderName.
+ * /
+ */
 export function getEndpoint(provider: ModelProviderName) {
     return models[provider].endpoint;
 }
