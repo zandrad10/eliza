@@ -28,6 +28,18 @@ import { User } from "./types.ts";
  * @param {Provider[]} [param.providers] - The providers to be used.
  * @returns {Object} An object containing the created user, session, and runtime.
  */
+/**
+ * * Create a runtime for the agent with the specified configuration.
+ * @param {object} param - The parameters for creating the runtime.
+ * @param {Record<string, string> | NodeJS.ProcessEnv} [param.env] - The environment variables or NodeJS.ProcessEnv object.
+ * @param {number} [param.conversationLength] - The conversation length.
+ * @param {Evaluator[]} [param.evaluators] - The evaluators for the runtime.
+ * @param {Action[]} [param.actions] - The actions for the runtime.
+ * @param {Provider[]} [param.providers] - The providers for the runtime.
+ * @returns {object} - An object containing the user, session, and runtime.
+ * /
+ * /
+ */
 export async function createRuntime({
     env,
     conversationLength,
