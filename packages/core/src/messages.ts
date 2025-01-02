@@ -9,6 +9,15 @@ import {
 /**
  * Get details for a list of actors.
  */
+/**
+ * * Retrieves details of actors in a specified room.
+ * 
+ * @param {Object} options - The options for fetching actor details.
+ * @param {IAgentRuntime} options.runtime - The runtime instance.
+ * @param {UUID} options.roomId - The ID of the room to fetch actor details for.
+ * @returns {Promise<Actor[]>} A promise that resolves with an array of actors with their details.
+ * /
+ */
 export async function getActorDetails({
     runtime,
     roomId,
