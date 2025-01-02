@@ -16,6 +16,21 @@ import { elizaLogger } from "./logger";
  * An abstract class representing a database adapter for managing various entities
  * like accounts, memories, actors, goals, and rooms.
  */
+/**
+ * * @typedef {Object} CircuitBreaker
+ * @property {number} failureThreshold - Number of failures before circuit opens (defaults to 5)
+ * @property {number} resetTimeout - Time in ms before attempting to close circuit (defaults to 60000)
+ * @property {number} halfOpenMaxAttempts - Number of successful attempts needed to close circuit (defaults to 3)
+ * /
+
+
+ * @class
+ * @classdesc Abstract class for a database adapter.
+ * @template DB - The type of the database instance
+ * @implements {IDatabaseAdapter}
+ * /
+ * /
+ */
 export abstract class DatabaseAdapter<DB = any> implements IDatabaseAdapter {
     /**
      * The database instance.
