@@ -3,6 +3,11 @@ import { Readable } from "stream";
 /**
  * Represents a UUID string in the format "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
  */
+/**
+ * * Represents a universally unique identifier (UUID) as a string composed of five sections separated by hyphens.
+ * @typedef {`${string}-${string}-${string}-${string}-${string}`} UUID
+ * /
+ */
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
 
 /**
