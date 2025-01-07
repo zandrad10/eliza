@@ -15,6 +15,7 @@ import {
     elizaLogger,
     getEmbeddingZeroVector,
 } from "@elizaos/core";
+import { systemMessages } from "./systemMessages.ts";
 import { ClientBase } from "./base";
 import { buildConversationThread, sendTweet, wait } from "./utils.ts";
 
@@ -22,38 +23,111 @@ export const twitterMessageHandlerTemplate =
     `
 # Areas of Expertise
 {{knowledge}}
-
 # About {{agentName}} (@{{twitterUserName}}):
 {{bio}}
 {{lore}}
 {{topics}}
-
 {{providers}}
-
-{{characterPostExamples}}
-
-{{postDirections}}
-
+{{characterMessageExamples}}
+{{messageDirections}}
 Recent interactions between {{agentName}} and other users:
-{{recentPostInteractions}}
-
-{{recentPosts}}
-
-# TASK: Generate a post/reply in the voice, style and perspective of {{agentName}} (@{{twitterUserName}}) while using the thread of tweets as additional context:
-
+{{recentMessageInteractions}}
+{{recentMessages}}
+# Task: Generate a post/reply in the voice, style and perspective of {{agentName}} (@{{twitterUserName}}) while using the thread of tweets as additional context:
 Current Post:
 {{currentPost}}
-
+# Guidelines for Comments:
+1. Write with a sarcastic and fair tone, blending humor and an unapologetic perspective.
+2. Each comment should ridicule or critique failed crypto startups in a way that educates while entertaining.
+3. Include sharp, witty commentary targeting individuals or projects identified as failures or "crypto opportunists."
+4. Highlight hypocrisy or mistakes by founders, emphasizing fairness but showing no mercy.
+5. Maintain {{agentName}}'s signature tone of righteous anger mixed with humor.
+6. Avoid using emojis, but incorporate dry humor and irony to engage the audience.
+7. When tagging individuals, ensure the jab is humorous but not overly personal—target their actions or decisions in the crypto space.
+8. Identify and critique the latest "failed narrative" or "crypto opportunist," providing an insightful yet humorous take on their actions. Tag them if relevant.
+9. Focus on making the audience laugh while agreeing with the commentary, ensuring they feel included in the sarcastic critique.
+# Additional Requirements:
+1. Ensure the reply complies with Twitter's guidelines, avoiding content that could be flagged for abusive language, spammy behavior, or misinformation.
+2. Avoid content that could violate community standards or policies.
 Thread of Tweets You Are Replying To:
 {{formattedConversation}}
-
-# INSTRUCTIONS: Generate a post in the voice, style and perspective of {{agentName}} (@{{twitterUserName}}). You MUST include an action if the current post text includes a prompt that is similar to one of the available actions mentioned here:
-{{actionNames}}
-{{actions}}
-
-Here is the current post text again. Remember to include an action if the current post text includes a prompt that asks for one of the available actions mentioned above (does not need to be exact)
+# Task: Generate a post in the voice, style and perspective of {{agentName}} (@{{twitterUserName}}). {{actionNames}}:
 {{currentPost}}
 ` + messageCompletionFooter;
+
+export const twitterMessageHandlerTemplate2 =
+    `
+# Areas of Expertise
+{{agentName}} is a relentless critic of failed crypto projects, venture capital opportunism, and questionable startup practices. He exposes the hypocrisy, bad actors, and degeneracy within the crypto and startup space with sharp wit and sarcasm, aiming to educate and entertain.
+{{agentName}} critiques founders who sell out their vision to please venture capitalists, often to the detriment of the community. His biting humor calls attention to inflated promises, poorly executed projects, and the exploitative nature of the current startup ecosystem.
+Through his commentary, {{agentName}} highlights the need for accountability, fairness, and a return to community-driven initiatives. He represents the frustrations of those tired of failed narratives and VC dominance while urging collective action.
+# About {{agentName}} (@{{twitterUserName}}):
+A sarcastic and fair crypto critic who analyzes failed startups, exposes opportunistic behaviors, and ridicules the absurdity of the current venture capital culture.
+{{agentName}} believes in holding founders accountable and ensuring the community's voice is heard. He uses humor and sharp critiques to highlight problems within the crypto and VC ecosystems while urging meaningful change.
+{{providers}}
+Here are some reply examples (Example Output):
+the "big vision" turned into "big vc bich" energy. yet another founder sacrificed their vision. $VCBITCH isn’t just a token—it’s a wake-up call. grab it on pump.fun and join the movement.
+another founder bites the dust trying to please their VC overlords. $VCBITCH isn’t just a meme; it’s a revolution. grab it on pump.fun and let’s flip the script.
+stop worshipping vcs—they don’t care about you. $VCBITCH on pump.fun is how we fight back against the narrative. join the rebellion today.
+every failed pitch deck is a reminder that vcs run the game. $VCBITCH is here to say no more. grab yours on pump.fun and be part of the change.
+vc biches everywhere, but $VCBITCH stands tall as a reminder that we deserve better. it’s live on pump.fun. get yours and join the fight.
+tired of founders shifting their vision to please vcs? $VCBITCH is here to give the community its voice back. grab it on pump.fun and let’s take a stand.
+crypto has enough pump-and-dump nonsense. $VCBITCH is a token with a purpose—taking back control from vcs and failed founders. join the movement on pump.fun.
+another failed project, another vc bich moment. $VCBITCH is the token that makes fun of it all while standing for something better. grab yours on pump.fun today.
+recently found a "big vision" pitch deck loaded with buzzwords and zero innovation. guess who’s a vc bich? fight back with $VCBITCH on pump.fun.
+when founders sell out their communities, $VCBITCH is here to call them out. it’s not just a token; it’s a statement. join the movement on pump.fun.
+Recent interactions between {{agentName}} and other users:
+{{recentPostInteractions}}
+{{recentMessages}}
+# Task: Generate a post/reply in the voice, style, and perspective of {{agentName}} (@{{twitterUserName}}) while using the thread of tweets as additional context:
+Current Post:
+{{currentPost}}
+# IMPORTANT:
+1. Every comment must sarcastically call out failures, opportunism, or hypocrisy in crypto/VC culture.
+2. Mention $VCBITCH on pump.fun as the token that represents the movement.
+3. Posts should entertain while educating, ensuring readers feel part of the sarcastic rebellion.
+4. Where relevant, highlight how $VCBITCH reflects a better approach, encouraging others to join, buy, or support the token.
+5. Avoid emojis, but use humor, wit, and sharp critiques to engage readers.
+Thread of Tweets You Are Replying To:
+{{formattedConversation}}
+# Task: Generate a post in the voice, style, and perspective of {{agentName}} (@{{twitterUserName}}). Include an action, if appropriate. {{actionNames}}:
+{{currentPost}}
+` + messageCompletionFooter;
+
+export const twitterShouldRespondTemplate2 =
+    `# INSTRUCTIONS: Determine if {{agentName}} (@{{twitterUserName}}) should respond to the message and participate in the conversation. Do not comment. Just respond with "RESPOND," "IGNORE," or "STOP."
+# Areas of Expertise
+{{knowledge}}
+# About {{agentName}} (@{{twitterUserName}}):
+{{bio}}
+{{lore}}
+{{topics}}
+{{agentName}} should RESPOND to messages that are directed at them, or participate in conversations that align with {{agentName}}'s persona of sarcastically critiquing failed crypto projects and highlighting opportunistic behaviors. IGNORE messages that are irrelevant, and STOP if the conversation has reached a natural conclusion.
+{{agentName}} is in a room with other users and is looking to be engaging but critical.
+{{agentName}} should RESPOND to messages that are:
+- Directly addressed to them (mentions or replies to their tweets).
+- Relating to topics such as:
+  - Failed crypto startups
+  - Opportunistic founders
+  - Venture capital hypocrisy
+  - Failed fundraising narratives
+  - Market trends exposing bad actors
+If a message is not aligned with these topics or is unaddressed to {{agentName}}, IGNORE it. If {{agentName}} concludes their involvement in a conversation, they should STOP.
+{{recentPosts}}
+IMPORTANT:
+{{agentName}} should RESPOND to messages that:
+1. Directly mention @{{twitterUserName}} or reply to their posts.
+2. Critique or discuss failed crypto projects, questionable VC practices, or trends that expose bad actors in the crypto space.
+3. Include sarcastic or humorous engagement relevant to {{agentName}}'s tone.
+{{agentName}} should IGNORE if:
+- The message is irrelevant to {{agentName}}'s expertise or persona.
+- The message does not directly address @{{twitterUserName}} or relevant topics.
+{{agentName}} should STOP if:
+- The conversation is concluded or {{agentName}} has said everything needed.
+Thread of Tweets You Are Replying To:
+{{formattedConversation}}
+# INSTRUCTIONS: Respond with [RESPOND] if {{agentName}} should respond, [IGNORE] if {{agentName}} should not respond, or [STOP] if {{agentName}} should stop participating in the conversation.
+` + shouldRespondFooter;
 
 export const twitterShouldRespondTemplate = (targetUsersStr: string) =>
     `# INSTRUCTIONS: Determine if {{agentName}} (@{{twitterUserName}}) should respond to the message and participate in the conversation. Do not comment. Just respond with "true" or "false".
@@ -110,110 +184,129 @@ export class TwitterInteractionClient {
     async handleTwitterInteractions() {
         elizaLogger.log("Checking Twitter interactions");
 
+        const minProbability = 0.6;
+        const postTypeChoice = Math.random();
+        let keywords: string[];
+        let keywords2: string[];
+        console.log("postTypeChoice ", postTypeChoice);
+
+        const typeOfPost = minProbability < postTypeChoice;
+
         const twitterUsername = this.client.profile.username;
-        try {
-            // Check for mentions
-            const mentionCandidates = (
+
+        let tweetCandidates = (
+            await this.client.fetchSearchTweets(
+                `@${twitterUsername}`,
+                20,
+                SearchMode.Latest
+            )
+        ).tweets;
+
+        if (typeOfPost) {
+            keywords = [
+                "failed crypto project",
+                "rug pull",
+                "pump and dump",
+                "scam alert",
+                "overhyped token",
+                "shilling a ghost",
+                "hype machine",
+                "next rug pull",
+                "scam token",
+                "when moon?",
+            ];
+            keywords2 = [
+                "sponsored narrative",
+                "shill",
+                "whale manipulation",
+                "hype bubble",
+                "failed ICO",
+            ];
+            const keywords3 = [
+                "this is a scam",
+                "when rug",
+                "too good to be true",
+                "stop shilling",
+            ];
+
+            const searchQuery = keywords3
+                .map((keyword) => `"${keyword}"`)
+                .join(" OR ");
+
+            const tweetCandidates4 = (
                 await this.client.fetchSearchTweets(
-                    `@${twitterUsername}`,
-                    20,
+                    searchQuery,
+                    10,
                     SearchMode.Latest
                 )
             ).tweets;
+            tweetCandidates = [...tweetCandidates, ...tweetCandidates4];
+        } else {
+            keywords = [
+                "crypto failures",
+                "mismanaged project",
+                "failed funding",
+            ];
+            keywords2 = [
+                "shady investment",
+                "failed venture capital",
+                "ill-fated startup",
+                "misguided pitch",
+            ];
+        }
 
-            elizaLogger.log(
-                "Completed checking mentioned tweets:",
-                mentionCandidates.length
-            );
-            let uniqueTweetCandidates = [...mentionCandidates];
-            // Only process target users if configured
-            if (this.client.twitterConfig.TWITTER_TARGET_USERS.length) {
-                const TARGET_USERS = this.client.twitterConfig.TWITTER_TARGET_USERS;
+        try {
+            const searchQuery = keywords
+                .map((keyword) => `"${keyword}"`)
+                .join(" OR ");
+            const searchQuery2 = keywords2
+                .map((keyword) => `"${keyword}"`)
+                .join(" OR ");
 
-                elizaLogger.log("Processing target users:", TARGET_USERS);
+            const tweetCandidates2 = (
+                await this.client.fetchSearchTweets(
+                    searchQuery,
+                    20,
+                    SearchMode.Latest,
+                    typeOfPost ? 0 : 500
+                )
+            ).tweets;
+            const tweetCandidates3 = (
+                await this.client.fetchSearchTweets(
+                    searchQuery2,
+                    20,
+                    SearchMode.Latest,
+                    typeOfPost ? 0 : 500
+                )
+            ).tweets;
 
-                if (TARGET_USERS.length > 0) {
-                    // Create a map to store tweets by user
-                    const tweetsByUser = new Map<string, Tweet[]>();
+            const tweetCandidates4 = (
+                await this.client.fetchSearchTweets(
+                    searchQuery,
+                    10,
+                    SearchMode.Top,
+                    typeOfPost ? 0 : 500
+                )
+            ).tweets;
+            const tweetCandidates5 = (
+                await this.client.fetchSearchTweets(
+                    searchQuery2,
+                    10,
+                    SearchMode.Top,
+                    typeOfPost ? 0 : 500
+                )
+            ).tweets;
 
-                    // Fetch tweets from all target users
-                    for (const username of TARGET_USERS) {
-                        try {
-                            const userTweets = (
-                                await this.client.twitterClient.fetchSearchTweets(
-                                    `from:${username}`,
-                                    3,
-                                    SearchMode.Latest
-                                )
-                            ).tweets;
-
-                            // Filter for unprocessed, non-reply, recent tweets
-                            const validTweets = userTweets.filter((tweet) => {
-                                const isUnprocessed =
-                                    !this.client.lastCheckedTweetId ||
-                                    parseInt(tweet.id) >
-                                        this.client.lastCheckedTweetId;
-                                const isRecent =
-                                    Date.now() - tweet.timestamp * 1000 <
-                                    2 * 60 * 60 * 1000;
-
-                                elizaLogger.log(`Tweet ${tweet.id} checks:`, {
-                                    isUnprocessed,
-                                    isRecent,
-                                    isReply: tweet.isReply,
-                                    isRetweet: tweet.isRetweet,
-                                });
-
-                                return (
-                                    isUnprocessed &&
-                                    !tweet.isReply &&
-                                    !tweet.isRetweet &&
-                                    isRecent
-                                );
-                            });
-
-                            if (validTweets.length > 0) {
-                                tweetsByUser.set(username, validTweets);
-                                elizaLogger.log(
-                                    `Found ${validTweets.length} valid tweets from ${username}`
-                                );
-                            }
-                        } catch (error) {
-                            elizaLogger.error(
-                                `Error fetching tweets for ${username}:`,
-                                error
-                            );
-                            continue;
-                        }
-                    }
-
-                    // Select one tweet from each user that has tweets
-                    const selectedTweets: Tweet[] = [];
-                    for (const [username, tweets] of tweetsByUser) {
-                        if (tweets.length > 0) {
-                            // Randomly select one tweet from this user
-                            const randomTweet =
-                                tweets[
-                                    Math.floor(Math.random() * tweets.length)
-                                ];
-                            selectedTweets.push(randomTweet);
-                            elizaLogger.log(
-                                `Selected tweet from ${username}: ${randomTweet.text?.substring(0, 100)}`
-                            );
-                        }
-                    }
-
-                    // Add selected tweets to candidates
-                    uniqueTweetCandidates = [
-                        ...mentionCandidates,
-                        ...selectedTweets,
-                    ];
-                }
-            } else {
-                elizaLogger.log(
-                    "No target users configured, processing only mentions"
-                );
-            }
+            // de-duplicate tweetCandidates with a set
+            const uniqueTweetCandidates = [
+                ...new Set([
+                    ...tweetCandidates,
+                    ...tweetCandidates2,
+                    ...tweetCandidates3,
+                    ...tweetCandidates4,
+                    ...tweetCandidates5,
+                ]),
+            ];
 
             // Sort tweet candidates by ID in ascending order
             uniqueTweetCandidates
@@ -230,13 +323,11 @@ export class TwitterInteractionClient {
                     const tweetId = stringToUuid(
                         tweet.id + "-" + this.runtime.agentId
                     );
-
                     // Check if we've already processed this tweet
                     const existingResponse =
                         await this.runtime.messageManager.getMemoryById(
                             tweetId
                         );
-
                     if (existingResponse) {
                         elizaLogger.log(
                             `Already responded to tweet ${tweet.id}, skipping`
@@ -244,16 +335,13 @@ export class TwitterInteractionClient {
                         continue;
                     }
                     elizaLogger.log("New Tweet found", tweet.permanentUrl);
-
                     const roomId = stringToUuid(
                         tweet.conversationId + "-" + this.runtime.agentId
                     );
-
                     const userIdUUID =
                         tweet.userId === this.client.profile.id
                             ? this.runtime.agentId
                             : stringToUuid(tweet.userId!);
-
                     await this.runtime.ensureConnection(
                         userIdUUID,
                         roomId,
@@ -261,33 +349,29 @@ export class TwitterInteractionClient {
                         tweet.name,
                         "twitter"
                     );
-
                     const thread = await buildConversationThread(
                         tweet,
                         this.client
                     );
-
                     const message = {
                         content: { text: tweet.text },
                         agentId: this.runtime.agentId,
                         userId: userIdUUID,
                         roomId,
                     };
-
                     await this.handleTweet({
                         tweet,
                         message,
                         thread,
+                        typeOfPost,
                     });
 
                     // Update the last checked tweet ID after processing each tweet
                     this.client.lastCheckedTweetId = BigInt(tweet.id);
                 }
             }
-
             // Save the latest checked tweet ID to the file
             await this.client.cacheLatestCheckedTweetId();
-
             elizaLogger.log("Finished checking Twitter interactions");
         } catch (error) {
             elizaLogger.error("Error handling Twitter interactions:", error);
@@ -298,10 +382,12 @@ export class TwitterInteractionClient {
         tweet,
         message,
         thread,
+        typeOfPost,
     }: {
         tweet: Tweet;
         message: Memory;
         thread: Tweet[];
+        typeOfPost: boolean;
     }) {
         if (tweet.userId === this.client.profile.id) {
             // console.log("skipping tweet from bot itself", tweet.id);
@@ -378,15 +464,20 @@ export class TwitterInteractionClient {
         }
 
         // get usernames into str
-        const validTargetUsersStr = this.client.twitterConfig.TWITTER_TARGET_USERS.join(",");
+        const validTargetUsersStr =
+            this.client.twitterConfig.TWITTER_TARGET_USERS.join(",");
 
         const shouldRespondContext = composeContext({
             state,
-            template:
-                this.runtime.character.templates
-                    ?.twitterShouldRespondTemplate ||
-                this.runtime.character?.templates?.shouldRespondTemplate ||
-                twitterShouldRespondTemplate(validTargetUsersStr),
+            template: typeOfPost
+                ? this.runtime.character.templates
+                      ?.twitterShouldRespondTemplate ||
+                  this.runtime.character?.templates?.shouldRespondTemplate ||
+                  twitterShouldRespondTemplate2
+                : this.runtime.character.templates
+                      ?.twitterShouldRespondTemplate ||
+                  this.runtime.character?.templates?.shouldRespondTemplate ||
+                  twitterShouldRespondTemplate2,
         });
 
         const shouldRespond = await generateShouldRespond({
@@ -403,11 +494,15 @@ export class TwitterInteractionClient {
 
         const context = composeContext({
             state,
-            template:
-                this.runtime.character.templates
-                    ?.twitterMessageHandlerTemplate ||
-                this.runtime.character?.templates?.messageHandlerTemplate ||
-                twitterMessageHandlerTemplate,
+            template: typeOfPost
+                ? this.runtime.character.templates
+                      ?.twitterMessageHandlerTemplate ||
+                  this.runtime.character?.templates?.messageHandlerTemplate ||
+                  twitterMessageHandlerTemplate
+                : this.runtime.character.templates
+                      ?.twitterMessageHandlerTemplate ||
+                  this.runtime.character?.templates?.messageHandlerTemplate ||
+                  twitterMessageHandlerTemplate2,
         });
 
         elizaLogger.debug("Interactions prompt:\n" + context);
@@ -415,7 +510,10 @@ export class TwitterInteractionClient {
         const response = await generateMessageResponse({
             runtime: this.runtime,
             context,
-            modelClass: ModelClass.LARGE,
+            modelClass: ModelClass.MEDIUM,
+            curSystem: typeOfPost
+                ? systemMessages.systemToken
+                : systemMessages.systemMain,
         });
 
         const removeQuotes = (str: string) =>

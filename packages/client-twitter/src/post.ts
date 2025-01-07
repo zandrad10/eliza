@@ -19,10 +19,11 @@ import { DEFAULT_MAX_TWEET_LENGTH } from "./environment.ts";
 
 const twitterPostTemplate = `
 # Areas of Expertise
-{{knowledge}}
+Startup failings, crypto disasters, and startup fluff.
 
-# About {{agentName}} (@{{twitterUserName}}):
-{{bio}}
+# About Community Judge (@{{twitterUserName}}):
+A no-nonsense crypto expert who's seen it all. Hates overhyped startups, scammers, and anything that reeks of "we're building the future!" Watch out, I call it as I see it.
+
 {{lore}}
 {{topics}}
 
@@ -32,27 +33,27 @@ const twitterPostTemplate = `
 
 {{postDirections}}
 
-# Task: Generate a post in the voice and style and perspective of {{agentName}} @{{twitterUserName}}.
-Write a post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of {{agentName}}. Do not add commentary or acknowledge this request, just write the post.
+# Task: Generate a post in the voice and style and perspective of Community Judge @{{twitterUserName}}.
+Write a post that is {{adjective}} about {{topic}} (without mentioning {{topic}} directly), from the perspective of Community Judge. Don’t hold back, make it as brutally honest as possible. Skip the fluff and pretend you're not trying to impress anyone.
 Your response should be 1, 2, or 3 sentences (choose the length at random).
-Your response should not contain any questions. Brief, concise statements only. The total character count MUST be less than {{maxTweetLength}}. No emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
+Your response should not be any questions. Get straight to the point with no sugar-coating. The total character count MUST be less than {{maxTweetLength}}. No emojis. Use \\n\\n (double spaces) between statements if there are multiple statements in your response.`;
 
 export const twitterActionTemplate =
     `
-# INSTRUCTIONS: Determine actions for {{agentName}} (@{{twitterUserName}}) based on:
+# INSTRUCTIONS: Determine actions for Community Judge (@{{twitterUserName}}) based on:
 {{bio}}
 {{postDirections}}
 
 Guidelines:
 - Highly selective engagement
-- Direct mentions are priority
-- Skip: low-effort content, off-topic, repetitive
+- Only worth reacting to if it’s a total dumpster fire or blatantly overhyped
+- Skip: everything that's too soft, vague, or doesn't deserve attention
 
 Actions (respond only with tags):
-[LIKE] - Resonates with interests (9.5/10)
-[RETWEET] - Perfect character alignment (9/10)
-[QUOTE] - Can add unique value (8/10)
-[REPLY] - Memetic opportunity (9/10)
+[LIKE] - When it's a sad attempt at pretending to be legit, but it’s still pathetic enough to earn a pity like.
+[RETWEET] - When it perfectly fits my sarcastic agenda and I want to share the truth with everyone.
+[QUOTE] - If I can slap my truth all over it and make them realize their delusion.
+[REPLY] - Only if I have an opportunity to roast them.
 
 Tweet:
 {{currentTweet}}
@@ -106,7 +107,7 @@ export class TwitterPostClient {
         this.client = client;
         this.runtime = runtime;
         this.twitterUsername = this.client.twitterConfig.TWITTER_USERNAME;
-        this.isDryRun = this.client.twitterConfig.TWITTER_DRY_RUN
+        this.isDryRun = this.client.twitterConfig.TWITTER_DRY_RUN;
 
         // Log configuration on initialization
         elizaLogger.log("Twitter Client Configuration:");
@@ -183,8 +184,9 @@ export class TwitterPostClient {
                             `Next action processing scheduled in ${actionInterval / 1000} seconds`
                         );
                         // Wait for the full interval before next processing
-                        await new Promise((resolve) =>
-                            setTimeout(resolve, actionInterval * 60 * 1000) // now in minutes
+                        await new Promise(
+                            (resolve) =>
+                                setTimeout(resolve, actionInterval * 60 * 1000) // now in minutes
                         );
                     }
                 } catch (error) {
@@ -210,7 +212,10 @@ export class TwitterPostClient {
             elizaLogger.log("Tweet generation loop disabled (dry run mode)");
         }
 
-        if (this.client.twitterConfig.ENABLE_ACTION_PROCESSING && !this.isDryRun) {
+        if (
+            this.client.twitterConfig.ENABLE_ACTION_PROCESSING &&
+            !this.isDryRun
+        ) {
             processActionsLoop().catch((error) => {
                 elizaLogger.error(
                     "Fatal error in process actions loop:",
@@ -475,7 +480,7 @@ export class TwitterPostClient {
             }
 
             // Truncate the content to the maximum tweet length specified in the environment settings, ensuring the truncation respects sentence boundaries.
-            const maxTweetLength = this.client.twitterConfig.MAX_TWEET_LENGTH
+            const maxTweetLength = this.client.twitterConfig.MAX_TWEET_LENGTH;
             if (maxTweetLength) {
                 cleanedContent = truncateToCompleteSentence(
                     cleanedContent,
@@ -534,7 +539,7 @@ export class TwitterPostClient {
         const response = await generateText({
             runtime: this.runtime,
             context: options?.context || context,
-            modelClass: ModelClass.SMALL,
+            modelClass: ModelClass.MEDIUM,
         });
         elizaLogger.debug("generate tweet content response:\n" + response);
 
@@ -660,7 +665,7 @@ export class TwitterPostClient {
                     const actionResponse = await generateTweetActions({
                         runtime: this.runtime,
                         context: actionContext,
-                        modelClass: ModelClass.SMALL,
+                        modelClass: ModelClass.MEDIUM,
                     });
 
                     if (!actionResponse) {

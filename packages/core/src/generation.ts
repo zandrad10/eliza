@@ -55,12 +55,14 @@ export async function generateText({
     context,
     modelClass,
     stop,
+    curSystem,
     customSystemPrompt,
 }: {
     runtime: IAgentRuntime;
     context: string;
     modelClass: string;
     stop?: string[];
+    curSystem?: string;
     customSystemPrompt?: string;
 }): Promise<string> {
     if (!context) {
@@ -202,6 +204,7 @@ export async function generateText({
                     model: openai.languageModel(model),
                     prompt: context,
                     system:
+                        curSystem ??
                         runtime.character.system ??
                         settings.SYSTEM_PROMPT ??
                         undefined,
@@ -816,10 +819,12 @@ export async function generateObjectDeprecated({
     runtime,
     context,
     modelClass,
+    curSystem,
 }: {
     runtime: IAgentRuntime;
     context: string;
     modelClass: string;
+    curSystem?: string;
 }): Promise<any> {
     if (!context) {
         elizaLogger.error("generateObjectDeprecated context is empty");
@@ -834,6 +839,7 @@ export async function generateObjectDeprecated({
                 runtime,
                 context,
                 modelClass,
+                curSystem,
             });
             const parsedResponse = parseJSONObjectFromText(response);
             if (parsedResponse) {
@@ -900,9 +906,11 @@ export async function generateMessageResponse({
     runtime,
     context,
     modelClass,
+    curSystem,
 }: {
     runtime: IAgentRuntime;
     context: string;
+    curSystem?: string;
     modelClass: string;
 }): Promise<Content> {
     const max_context_length =
@@ -966,33 +974,35 @@ export const generateImage = async (
     });
 
     const apiKey =
-    runtime.imageModelProvider === runtime.modelProvider
-        ? runtime.token
-        : (() => {
-            // First try to match the specific provider
-            switch (runtime.imageModelProvider) {
-                case ModelProviderName.HEURIST:
-                    return runtime.getSetting("HEURIST_API_KEY");
-                case ModelProviderName.TOGETHER:
-                    return runtime.getSetting("TOGETHER_API_KEY");
-                case ModelProviderName.FAL:
-                    return runtime.getSetting("FAL_API_KEY");
-                case ModelProviderName.OPENAI:
-                    return runtime.getSetting("OPENAI_API_KEY");
-                case ModelProviderName.VENICE:
-                    return runtime.getSetting("VENICE_API_KEY");
-                case ModelProviderName.LIVEPEER:
-                    return runtime.getSetting("LIVEPEER_GATEWAY_URL");
-                default:
-                    // If no specific match, try the fallback chain
-                    return (runtime.getSetting("HEURIST_API_KEY") ??
-                           runtime.getSetting("TOGETHER_API_KEY") ??
-                           runtime.getSetting("FAL_API_KEY") ??
-                           runtime.getSetting("OPENAI_API_KEY") ??
-                           runtime.getSetting("VENICE_API_KEY"))??
-                           runtime.getSetting("LIVEPEER_GATEWAY_URL");
-            }
-        })();
+        runtime.imageModelProvider === runtime.modelProvider
+            ? runtime.token
+            : (() => {
+                  // First try to match the specific provider
+                  switch (runtime.imageModelProvider) {
+                      case ModelProviderName.HEURIST:
+                          return runtime.getSetting("HEURIST_API_KEY");
+                      case ModelProviderName.TOGETHER:
+                          return runtime.getSetting("TOGETHER_API_KEY");
+                      case ModelProviderName.FAL:
+                          return runtime.getSetting("FAL_API_KEY");
+                      case ModelProviderName.OPENAI:
+                          return runtime.getSetting("OPENAI_API_KEY");
+                      case ModelProviderName.VENICE:
+                          return runtime.getSetting("VENICE_API_KEY");
+                      case ModelProviderName.LIVEPEER:
+                          return runtime.getSetting("LIVEPEER_GATEWAY_URL");
+                      default:
+                          // If no specific match, try the fallback chain
+                          return (
+                              runtime.getSetting("HEURIST_API_KEY") ??
+                              runtime.getSetting("TOGETHER_API_KEY") ??
+                              runtime.getSetting("FAL_API_KEY") ??
+                              runtime.getSetting("OPENAI_API_KEY") ??
+                              runtime.getSetting("VENICE_API_KEY") ??
+                              runtime.getSetting("LIVEPEER_GATEWAY_URL")
+                          );
+                  }
+              })();
     try {
         if (runtime.imageModelProvider === ModelProviderName.HEURIST) {
             const response = await fetch(
@@ -1182,28 +1192,31 @@ export const generateImage = async (
             });
 
             return { success: true, data: base64s };
-
         } else if (runtime.imageModelProvider === ModelProviderName.LIVEPEER) {
             if (!apiKey) {
                 throw new Error("Livepeer Gateway is not defined");
             }
             try {
                 const baseUrl = new URL(apiKey);
-                if (!baseUrl.protocol.startsWith('http')) {
+                if (!baseUrl.protocol.startsWith("http")) {
                     throw new Error("Invalid Livepeer Gateway URL protocol");
                 }
-                const response = await fetch(`${baseUrl.toString()}text-to-image`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        model_id: data.modelId || "ByteDance/SDXL-Lightning",
-                        prompt: data.prompt,
-                        width: data.width || 1024,
-                        height: data.height || 1024
-                    })
-                });
+                const response = await fetch(
+                    `${baseUrl.toString()}text-to-image`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            model_id:
+                                data.modelId || "ByteDance/SDXL-Lightning",
+                            prompt: data.prompt,
+                            width: data.width || 1024,
+                            height: data.height || 1024,
+                        }),
+                    }
+                );
                 const result = await response.json();
                 if (!result.images?.length) {
                     throw new Error("No images generated");
@@ -1225,19 +1238,19 @@ export const generateImage = async (
                         }
                         const blob = await imageResponse.blob();
                         const arrayBuffer = await blob.arrayBuffer();
-                        const base64 = Buffer.from(arrayBuffer).toString("base64");
+                        const base64 =
+                            Buffer.from(arrayBuffer).toString("base64");
                         return `data:image/jpeg;base64,${base64}`;
                     })
                 );
                 return {
                     success: true,
-                    data: base64Images
+                    data: base64Images,
                 };
             } catch (error) {
                 console.error(error);
                 return { success: false, error: error };
             }
-
         } else {
             let targetSize = `${data.width}x${data.height}`;
             if (

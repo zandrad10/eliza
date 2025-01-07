@@ -1,5 +1,5 @@
 import { SearchMode } from "agent-twitter-client";
-import {composeContext, elizaLogger} from "@elizaos/core";
+import { composeContext, elizaLogger } from "@elizaos/core";
 import { generateMessageResponse, generateText } from "@elizaos/core";
 import { messageCompletionFooter } from "@elizaos/core";
 import {
@@ -60,8 +60,11 @@ export class TwitterSearchClient {
 
     private engageWithSearchTermsLoop() {
         this.engageWithSearchTerms().then();
-        const randomMinutes = (Math.floor(Math.random() * (120 - 60 + 1)) + 60);
-        elizaLogger.log(`Next twitter search scheduled in ${randomMinutes} minutes`);
+        // const randomMinutes = Math.floor(Math.random() * (120 - 60 + 1)) + 60;
+        const randomMinutes = 1;
+        elizaLogger.log(
+            `Next twitter search scheduled in ${randomMinutes} minutes`
+        );
         setTimeout(
             () => this.engageWithSearchTermsLoop(),
             randomMinutes * 60 * 1000
@@ -81,10 +84,14 @@ export class TwitterSearchClient {
             const recentTweets = await this.client.fetchSearchTweets(
                 searchTerm,
                 20,
-                SearchMode.Top
+                SearchMode.Latest
             );
             console.log("Search tweets fetched");
-
+            const recentTweets2 = await this.client.fetchSearchTweets(
+                searchTerm,
+                20,
+                SearchMode.Top
+            );
             const homeTimeline = await this.client.fetchHomeTimeline(50);
 
             await this.client.cacheTimeline(homeTimeline);
@@ -98,7 +105,10 @@ export class TwitterSearchClient {
                     .join("\n");
 
             // randomly slice .tweets down to 20
-            const slicedTweets = recentTweets.tweets
+            const slicedTweets = [
+                ...recentTweets.tweets,
+                ...recentTweets2.tweets,
+            ]
                 .sort(() => Math.random() - 0.5)
                 .slice(0, 20);
 
