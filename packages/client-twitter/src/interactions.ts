@@ -46,9 +46,11 @@ Current Post:
 7. When tagging individuals, ensure the jab is humorous but not overly personal—target their actions or decisions in the crypto space.
 8. Identify and critique the latest "failed narrative" or "crypto opportunist," providing an insightful yet humorous take on their actions. Tag them if relevant.
 9. Focus on making the audience laugh while agreeing with the commentary, ensuring they feel included in the sarcastic critique.
+
 # Additional Requirements:
 1. Ensure the reply complies with Twitter's guidelines, avoiding content that could be flagged for abusive language, spammy behavior, or misinformation.
 2. Avoid content that could violate community standards or policies.
+3. If tweet is not about crypto IGNORE.
 Thread of Tweets You Are Replying To:
 {{formattedConversation}}
 # Task: Generate a post in the voice, style and perspective of {{agentName}} (@{{twitterUserName}}). {{actionNames}}:
@@ -84,7 +86,7 @@ Current Post:
 {{currentPost}}
 # IMPORTANT:
 1. Every comment must sarcastically call out failures, opportunism, or hypocrisy in crypto/VC culture.
-2. Mention $VCBITCH on pump.fun as the token that represents the movement.
+2. You only comment on tweets related to crypto.
 3. Posts should entertain while educating, ensuring readers feel part of the sarcastic rebellion.
 4. Where relevant, highlight how $VCBITCH reflects a better approach, encouraging others to join, buy, or support the token.
 5. Avoid emojis, but use humor, wit, and sharp critiques to engage readers.
@@ -204,54 +206,62 @@ export class TwitterInteractionClient {
 
         if (typeOfPost) {
             keywords = [
-                "failed crypto project",
-                "rug pull",
-                "pump and dump",
-                "scam alert",
-                "overhyped token",
-                "shilling a ghost",
-                "hype machine",
-                "next rug pull",
-                "scam token",
-                "when moon?",
+                "failed",
+                " crypto",
+                "project",
+                "rug",
+                "pull",
+                "pump",
+                "scam",
+                "alert",
+                "overhyped",
+                "token",
             ];
             keywords2 = [
-                "sponsored narrative",
+                "sponsored",
+                "narrative",
                 "shill",
-                "whale manipulation",
-                "hype bubble",
+                "whale",
+                "manipulation",
+                "hype",
+                "bubble",
                 "failed ICO",
             ];
-            const keywords3 = [
-                "this is a scam",
-                "when rug",
-                "too good to be true",
-                "stop shilling",
-            ];
 
-            const searchQuery = keywords3
+            const searchQuery = [...keywords2, ...keywords]
                 .map((keyword) => `"${keyword}"`)
                 .join(" OR ");
 
-            const tweetCandidates4 = (
+            const tweetCandidates2 = (
                 await this.client.fetchSearchTweets(
                     searchQuery,
                     10,
                     SearchMode.Latest
                 )
             ).tweets;
-            tweetCandidates = [...tweetCandidates, ...tweetCandidates4];
+            tweetCandidates = [...tweetCandidates, ...tweetCandidates2];
         } else {
             keywords = [
-                "crypto failures",
-                "mismanaged project",
-                "failed funding",
+                "failed",
+                " crypto",
+                "project",
+                "rug",
+                "pull",
+                "pump",
+                "scam",
+                "alert",
+                "overhyped",
+                "token",
             ];
             keywords2 = [
-                "shady investment",
-                "failed venture capital",
-                "ill-fated startup",
-                "misguided pitch",
+                "sponsored",
+                "narrative",
+                "shill",
+                "whale",
+                "manipulation",
+                "hype",
+                "bubble",
+                "failed ICO",
             ];
         }
 
